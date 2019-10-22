@@ -14,8 +14,8 @@ r       <- raster(P.idw)
 r.m     <- mask(r, SC.AirBasin.t)
 
 tm_shape(r.m) + 
-  tm_raster(n=10,palette = "RdBu", auto.palette.mapping = FALSE,
-            title="Predicted Ozone \n(in ppp)") + 
+  tm_raster(n=10,palette = "RdBu",
+            title="Predicted Ozone \n(in ppm)") + 
   tm_shape(ozone.mean.spdf) + tm_dots(size=0.2) +
   tm_legend(legend.outside=TRUE)
 
@@ -66,7 +66,7 @@ CI <- sqrt( 1/(n*(n-1)) * c1)
 img.sig   <- img
 img.sig$v <- CI /img$var1.pred 
 
-# Clip the confidence raster to Texas
+# Clip the confidence raster to Southern California
 r <- raster(img.sig, layer="v")
 r.m <- mask(r, SC.AirBasin.t)
 

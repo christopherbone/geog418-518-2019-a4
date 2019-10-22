@@ -1,5 +1,15 @@
 #################################################
 ##Prepare Pollution Data
+library(rgdal)
+library(gstat)
+library(sp)
+library(spatstat)  # Used for the dirichlet tessellation function
+library(maptools)  # Used for conversion from SPDF to ppp
+library(raster)    # Used to clip out thiessen polygons
+library(tmap)
+
+dir <- "D:/GEOG_418_2019/A4/2019/"
+setwd(dir)
 
 #DATASET 1
 #Read the pollution csv dataset.
@@ -11,15 +21,18 @@ monitor = readOGR(dsn = ".", layer = "airmonitoringstations")
 #Extract the monitoring stations for the South Coast (SC)
 SC.monitor = monitor[monitor$AIRBASIN %in% c("South Coast"),]
 #Reproject the data to a suitable projection. Here we use a UTM projection because of the scale of the analysis. 
-SC.monitor.t = spTransform(SC.monitor, CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+SC.monitor.t = spTransform(SC.monitor, CRS("+init=epsg:26911"))
+
 
 #DATASET 3
 #Read the California Air Basin spatial dataset.
 Ca.AirBasin = readOGR(dsn = ".", layer = "CaAirBasin")
+
 #Extract the South Coast air basin from the spatial dataset. 
 SC.AirBasin = Ca.AirBasin[Ca.AirBasin$NAME %in% c("South Coast"),] 
+
 #Reproject the South Coast air basin spatial dataset to match the projeciton of the monitoring station dataset.  
-SC.AirBasin.t = spTransform(SC.AirBasin, CRS("+proj=longlat +datum=NAD83 +no_defs +ellps=GRS80 +towgs84=0,0,0"))
+SC.AirBasin.t = spTransform(SC.AirBasin, CRS("+init=epsg:26911"))
 
 
 ##################################################################
@@ -49,8 +62,9 @@ ozone.mean.spdf = na.omit(mrg.tab.mean)
 ozone.max.spdf = na.omit(mrg.tab.max)
 
 # Load and observe ozone data
-tm_shape(SC.AirBasin.t) + tm_polygons() +
+tm_shape(SC.AirBasin.t) + 
+  tm_polygons() +
   tm_shape(ozone.mean.spdf) +
-  tm_dots(col="value", palette = "RdBu", auto.palette.mapping = FALSE,
-          title="Sampled Ozone \n(in ppm)", size=0.7) + tm_legend(legend.outside=TRUE)
-
+  tm_dots(col="value", palette = "RdBu", 
+          title="Sampled Ozone \n(in ppm)", size=0.7) + 
+  tm_legend(legend.outside=TRUE)

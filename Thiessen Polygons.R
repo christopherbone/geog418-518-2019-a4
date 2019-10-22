@@ -1,6 +1,5 @@
 #################################################
 ##Spatial Interpolation with Thiessen Polygons
-
 # Create a tessellated surface
 th  <-  as(dirichlet(as.ppp(ozone.mean.spdf)), "SpatialPolygons")
 
@@ -16,11 +15,11 @@ proj4string(th) <- proj4string(ozone.mean.spdf)
 th.z     <- over(th, ozone.mean.spdf, fn=mean)
 th.spdf  <-  SpatialPolygonsDataFrame(th, th.z)
 
-# Finally, we'll clip the tessellated  surface to the Texas boundaries
+# Finally, we'll clip the tessellated  surface to the South Coast Air Basin boundaries
 th.clp   <- raster::intersect(SC.AirBasin.t,th.spdf)
 
 # Map the data
 tm_shape(th.clp) + 
-  tm_polygons(col="value", palette="RdBu", auto.palette.mapping=FALSE,
+  tm_polygons(col="value", palette="RdBu",
               title="Predicted Ozone \n(in ppm)") +
   tm_legend(legend.outside=TRUE)

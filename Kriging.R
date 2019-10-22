@@ -21,7 +21,7 @@ r.m <- mask(r, SC.AirBasin.t)
 
 # Plot the map
 tm_shape(r.m) + 
-  tm_raster(n=10, palette="RdBu", auto.palette.mapping=FALSE, 
+  tm_raster(n=10, palette="RdBu",  
             title="Predicted Ozone \n(in ppm)") +
   tm_shape(ozone.mean.spdf) + tm_dots(size=0.2) +
   tm_legend(legend.outside=TRUE)
