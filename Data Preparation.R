@@ -1,35 +1,38 @@
 #################################################
 ##Prepare Pollution Data
 library(rgdal)
-library(gstat)
-library(sp)
 library(spatstat)  # Used for the dirichlet tessellation function
 library(maptools)  # Used for conversion from SPDF to ppp
-library(raster)    # Used to clip out thiessen polygons
 library(tmap)
+library(gstat)
+library(raster)    # Used to clip out thiessen polygons
+library(sp)
 
-dir <- "D:/GEOG_418_2019/A4/2019/"
-setwd(dir)
+
+dir <- ""
+setwd()
 
 #DATASET 1
 #Read the pollution csv dataset.
-ozone = read.csv("OZONE_PICKDATA_2016-4-30.csv", header = T, sep = ",")
+ozone = read.csv("", header = T, sep = ",")
 
 #DATASET 2
 #Read the monitoring station spatial dataset as an OGR data object.
-monitor = readOGR(dsn = ".", layer = "airmonitoringstations")
+monitor = readOGR(dsn = , layer = )
+
 #Extract the monitoring stations for the South Coast (SC)
-SC.monitor = monitor[monitor$AIRBASIN %in% c("South Coast"),]
+SC.monitor = monitor[monitor$AIRBASIN %in% c(),]
+
 #Reproject the data to a suitable projection. Here we use a UTM projection because of the scale of the analysis. 
 SC.monitor.t = spTransform(SC.monitor, CRS("+init=epsg:26911"))
 
 
 #DATASET 3
 #Read the California Air Basin spatial dataset.
-Ca.AirBasin = readOGR(dsn = ".", layer = "CaAirBasin")
+Ca.AirBasin = readOGR(dsn = , layer = )
 
 #Extract the South Coast air basin from the spatial dataset. 
-SC.AirBasin = Ca.AirBasin[Ca.AirBasin$NAME %in% c("South Coast"),] 
+SC.AirBasin = Ca.AirBasin[Ca.AirBasin$NAME %in% c(),] 
 
 #Reproject the South Coast air basin spatial dataset to match the projeciton of the monitoring station dataset.  
 SC.AirBasin.t = spTransform(SC.AirBasin, CRS("+init=epsg:26911"))
@@ -54,17 +57,17 @@ max.ozone = aggregate(value ~ site, ozone, max)
 names(SC.monitor.t)[1] ="site"  
 
 #Merge the the monitoring station shapefile with the ozone data using the site column.  
-mrg.tab.mean <- sp::merge(SC.monitor.t, mean.ozone, by = "site", all.x = FALSE) 
-mrg.tab.max <- sp::merge(SC.monitor.t, max.ozone, by = "site", all.x = FALSE)
+mrg.tab.mean <- sp::merge(SC.monitor.t, mean.ozone, by = , all.x = FALSE) 
+mrg.tab.max <- sp::merge(SC.monitor.t, max.ozone, by = , all.x = FALSE)
 
 #Create a max and a mean spatialPointDataFrame. 
 ozone.mean.spdf = na.omit(mrg.tab.mean)
 ozone.max.spdf = na.omit(mrg.tab.max)
 
 # Load and observe ozone data
-tm_shape(SC.AirBasin.t) + 
+tm_shape(POLYGON) + 
   tm_polygons() +
-  tm_shape(ozone.mean.spdf) +
+  tm_shape(POINTS) +
   tm_dots(col="value", palette = "RdBu", 
           title="Sampled Ozone \n(in ppm)", size=0.7) + 
   tm_legend(legend.outside=TRUE)

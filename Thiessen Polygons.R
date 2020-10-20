@@ -19,7 +19,7 @@ th.spdf  <-  SpatialPolygonsDataFrame(th, th.z)
 th.clp   <- raster::intersect(SC.AirBasin.t,th.spdf)
 
 # Map the data
-tm_shape(th.clp) + 
+tm_shape(POLYGONS) + 
   tm_polygons(col="value", palette="RdBu",
               title="Predicted Ozone \n(in ppm)") +
   tm_legend(legend.outside=TRUE)

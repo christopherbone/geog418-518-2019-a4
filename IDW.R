@@ -9,14 +9,16 @@ gridded(grd)     <- TRUE  # Create SpatialPixel object
 fullgrid(grd)    <- TRUE  # Create SpatialGrid object
 
 proj4string(grd) <- proj4string(SC.monitor.t)
-P.idw <- gstat::idw(value ~ 1, ozone.mean.spdf, newdata=grd, idp=2.0)
+
+#IDW Interpolation
+P.idw <- gstat::idw(value ~ 1, ozone.mean.spdf, newdata=grd, idp=1)
 r       <- raster(P.idw)
 r.m     <- mask(r, SC.AirBasin.t)
 
-tm_shape(r.m) + 
+tm_shape(RASTER) + 
   tm_raster(n=10,palette = "RdBu",
             title="Predicted Ozone \n(in ppm)") + 
-  tm_shape(ozone.mean.spdf) + tm_dots(size=0.2) +
+  tm_shape(POINTS) + tm_dots(size=0.2) +
   tm_legend(legend.outside=TRUE)
 
 #################################################
@@ -71,8 +73,8 @@ r <- raster(img.sig, layer="v")
 r.m <- mask(r, SC.AirBasin.t)
 
 # Plot the map
-tm_shape(r.m) + tm_raster(n=7,title="95% confidence interval \n(in ppm)") +
-  tm_shape(ozone.mean.spdf) + tm_dots(size=0.2) +
+tm_shape(RASTER) + tm_raster(n=7,title="95% confidence interval \n(in ppm)") +
+  tm_shape(POINTS) + tm_dots(size=0.2) +
   tm_legend(legend.outside=TRUE)
 
 
